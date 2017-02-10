@@ -1,0 +1,151 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "AWS CloudFormation Web-ELB SecurityGroup",
+  
+  "Parameters" : {
+    "VPC": {
+      "Description" : "Name of an VPC",
+      "Type": "String",
+	  "MinLength": "9",
+      "MaxLength": "18",
+      "Default": "vpc-1c22e87a"
+    }
+  },
+  
+  "Resources" : {
+    
+  
+	
+   "webELBSG" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "VpcId" : { "Ref" : "VPC"},
+		"GroupDescription" : "Enable  HTTP access on port 80, HTTPS access on port 443 and tomcat admin 8080 access",
+        "SecurityGroupIngress" : [ 
+			{ 
+          "IpProtocol" : "tcp",
+          "FromPort" : "80",
+          "ToPort" : "80",
+          "CidrIp" :  "24.116.170.23/32" 
+			},
+			{
+          "IpProtocol" : "tcp",
+          "FromPort" : "443",
+          "ToPort" : "443",
+          "CidrIp" :  "24.116.170.23/32" 
+			},
+			{ 
+		  "IpProtocol" : "tcp",
+          "FromPort" : "8080",
+          "ToPort" : "8080",
+          "CidrIp" :  "24.116.170.23/32" 
+			},
+			{ 
+          "IpProtocol" : "tcp",
+          "FromPort" : "80",
+          "ToPort" : "80",
+          "CidrIp" :  "76.100.95.180/32" 
+			},
+			{
+          "IpProtocol" : "tcp",
+          "FromPort" : "443",
+          "ToPort" : "443",
+          "CidrIp" : "76.100.95.180/32" 
+			},
+			{ 
+		  "IpProtocol" : "tcp",
+          "FromPort" : "8080",
+          "ToPort" : "8080",
+          "CidrIp" : "76.100.95.180/32" 
+			},
+			{ 
+          "IpProtocol" : "tcp",
+          "FromPort" : "80",
+          "ToPort" : "80",
+          "CidrIp" :  "76.117.170.75/32" 
+			},
+			{
+          "IpProtocol" : "tcp",
+          "FromPort" : "443",
+          "ToPort" : "443",
+          "CidrIp" :  "76.117.170.75/32" 
+			},
+			{ 
+		  "IpProtocol" : "tcp",
+          "FromPort" : "8080",
+          "ToPort" : "8080",
+          "CidrIp" :  "76.117.170.75/32" 
+			},
+			{ 
+          "IpProtocol" : "tcp",
+          "FromPort" : "80",
+          "ToPort" : "80",
+          "CidrIp" :  "96.18.234.11/32" 
+			},
+			{
+          "IpProtocol" : "tcp",
+          "FromPort" : "443",
+          "ToPort" : "443",
+          "CidrIp" :  "96.18.234.11/32" 
+			},
+			{ 
+		  "IpProtocol" : "tcp",
+          "FromPort" : "8080", 
+		  "ToPort" : "8080",
+          "CidrIp" :  "96.18.234.11/32"		
+		    },
+			{ 
+          "IpProtocol" : "tcp",
+          "FromPort" : "80",
+          "ToPort" : "80",
+          "CidrIp" :  "97.65.103.78/32" 
+			},
+			{
+          "IpProtocol" : "tcp",
+          "FromPort" : "443",
+          "ToPort" : "443",
+          "CidrIp" :  "97.65.103.78/32" 
+			},
+			{ 
+		  "IpProtocol" : "tcp",
+          "FromPort" : "8080",
+          "ToPort" : "8080",
+          "CidrIp" :  "97.65.103.78/32" 
+			}
+		]
+	
+      }
+    },
+	   "webserverSG" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+
+		"GroupDescription" : "Enable  HTTP access on port 80, HTTPS access on port 443 and tomcat admin 8080 access fromt he Web ELB only",
+        "VpcId" : { "Ref" : "VPC"},
+		"SecurityGroupIngress" : [ 
+			{ 
+          "IpProtocol" : "tcp",
+          "FromPort" : "80",
+          "ToPort" : "80",
+          "SourceSecurityGroupId" : { "Fn::GetAtt" : [ "webELBSG", "GroupId" ] }
+			},
+			{
+          "IpProtocol" : "tcp",
+          "FromPort" : "443",
+          "ToPort" : "443",
+          "SourceSecurityGroupId" : { "Fn::GetAtt" : [ "webELBSG", "GroupId" ] }
+			},
+			{ 
+		  "IpProtocol" : "tcp",
+          "FromPort" : "8080",
+          "ToPort" : "8080",
+          "SourceSecurityGroupId" : { "Fn::GetAtt" : [ "webELBSG", "GroupId" ] }
+			}
+		]
+		
+      }
+    }
+  }
+}
+
